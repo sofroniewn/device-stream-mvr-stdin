@@ -33,8 +33,8 @@ createExperimentStream = function (initial) {
     var curTime = Date.now()
     var deltaTime = curTime - prevTime
     prevTime = curTime
-    position.forward += data.velocity.forward
-    position.lateral += data.velocity.lateral
+    position.forward += data.velocityForward
+    position.lateral += data.velocityLateral
 
     if (position.forward > 100) position.forward = 100      
     if (position.forward < 0) position.forward = 0      
@@ -47,20 +47,21 @@ createExperimentStream = function (initial) {
       reward = false
     }
 
-
     wallDistance.left = 50 + position.lateral
     wallDistance.right = 50 - position.lateral
     wallDistance.forward = 100 - position.forward
 
-
-
     callback(null, {
-      position: position,
-      velocity: data.velocity,
+      positionForward: position.forward,
+      positionLateral: position.forward,
+      velocityForward: data.velocityForward,
+      velocityLateral: data.velocityLateral,
       response: data.response,
       reward: reward,
       trialNumber: trialNumber,
-      wallDistance: wallDistance,
+      wallLeft: wallDistance.left,
+      wallRight: wallDistance.right,
+      wallForward: wallDistance.forward,
       time: deltaTime
     })
   })

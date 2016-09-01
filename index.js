@@ -11,7 +11,8 @@ module.exports = function () {
   var tty = TTY()
   var keymap = ['<left>', '<right>', '<up>', '<down>']
   var translationMap = [[-1, 1, 0, 0], [0, 0, 1, -1]]
-  var velocity = [0, 0]
+  var velocityForward = 0
+  var velocityLateral = 0
   var friction = 0.1
   var response = false
   var started = false
@@ -25,9 +26,9 @@ module.exports = function () {
           console.log('Reward: ' + chalk.bgBlack('  '))        
         }
         console.log('Trial number: ' + data.trialNumber)
-        console.log('Left wall distance: ' + data.wallDistance.left + ' mm')
-        console.log('Right wall distance: ' + data.wallDistance.right + ' mm')
-        console.log('Forward wall distance: ' + data.wallDistance.forward + ' mm')
+        console.log('Left wall distance: ' + data.wallLeft + ' mm')
+        console.log('Right wall distance: ' + data.wallRight + ' mm')
+        console.log('Forward wall distance: ' + data.wallForward + ' mm')
 
         callback()
       })
@@ -38,22 +39,20 @@ module.exports = function () {
         timer.setInterval(function () {
           keymap.forEach(function (key, i) {
             if (tty.keysDown[key]) {
-              velocity[0] += 4*translationMap[0][i]
-              velocity[1] += 4*translationMap[1][i]
+              velocityLateral += 4/10*translationMap[0][i]
+              velocityForward += 4/10*translationMap[1][i]
             }
           })
-          velocity[0] *= friction
-          velocity[1] *= friction
+          velocityLateral *= friction
+          velocityForward *= friction
           if (tty.keysDown['R']) response = true
           else response = false
           readableStream.push({
-            velocity: {
-              forward: velocity[1],
-              lateral: velocity[0]
-            },
+            velocityForward: velocityForward,
+            velocityLateral: velocityLateral,
             response: response
           })
-        }, '', '20m')
+        }, '', '2m')
         started = true
       }
     },
