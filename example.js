@@ -1,6 +1,6 @@
 var device = require('./')()
 
-var deviceStream = device.createStream()
+var deviceStream = device.create()
 
 var initial = {
   wallDistance: {

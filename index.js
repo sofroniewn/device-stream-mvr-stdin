@@ -20,7 +20,7 @@ module.exports = function () {
   }
 
   return {
-    createStream: function () {
+    create: function () {
       var writableStream = writer.obj(function(data, enc, callback) {
         if (data.reward) {
           console.log('Reward: ' + chalk.bgGreen('  '))
